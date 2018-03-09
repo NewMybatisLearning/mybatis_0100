@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mapper">
+	<select id="selectUserById" parameterType="int" resultType="user">
+		select id, username, sex, birthday, address from t_user where id = #{id}
+	</select>
+	<select id="selectUserAll" resultType="user">
+		select * from t_user
+	</select>
+
+	<select id="selectLikeUsername" resultType="user" parameterType="String">
+		select id, username, sex, birthday, address from t_user where username like '%${value}%'
+	</select>
+	
+	<insert id="insertUser" parameterType="user">
+		<selectKey keyProperty="id" resultType="int" order="AFTER">
+			select LAST_INSERT_ID()
+		</selectKey>
+		insert into t_user(id, username, sex, birthday, address) values
+		(#{id}, #{username}, #{sex}, #{birthday}, #{address})
+	</insert>
+	
+	<update id="updateUserById" parameterType="user">
+		update t_user set username=#{username}, sex=#{sex}, birthday=#{birthday}, address=#{address} where id=#{id}
+	</update>
+
+	
+    <!-- 6. delete user by id -->
+    <delete id="deleteUserById" parameterType="int">
+    	delete from t_user where id = #{id}
+    </delete>
+    
+    <select id="getUserByBirthdayRange" parameterType="Map" resultType="user">
+    	select * from t_user where birthday &gt; #{min} and birthday &lt; #{max}
+    </select>
+    
+</mapper>
